@@ -1,13 +1,172 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
+  url = env("DATABASE_URL")
 }
+
+// user
+
+model User {
+  id String @id @default(uuid())
+  email String @unique
+  username String @unique
+  password String
+  name String?
+  bio String?
+  avatar String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  //Relations
+
+  stories Story[]
+  commits Commit[]
+  collaborations Collaborator[]
+  ratings Rating[]
+  forksGiven Fork[] @relation("ForkedBy")
+}
+
+//Story
+
+model Story {
+  id String @id @default(uuid())
+  title String
+  description String?
+  coverImage String?
+  genre String?
+  tags String[]
+  isPublished Boolean @default(false)
+  wordCount Int @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  //Owner
+
+  authorId String
+  author User @relation(fields: [authorId],references: [id], onDelete : Cascade)
+
+  //Fork tracking
+  forkedFromId String?
+  forkedFrom Story? @relation("PlotForge", fields: [forkedFromId], references: [id])
+  forks Story[] @relation("PlotForge")
+  forkRecord Fork[]
+
+  //Relations
+
+  branches Branch[]
+  collaborators Collaborator[]
+}
+
+//Branch
+
+model Branch {
+  id String @id @default(uuid())
+  name String
+  isDefault Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  //Story
+  storyId String
+  story Story @relation(fields: [storyId] , references: [id], onDelete: Cascade)
+
+  // Latest commit on current branch
+
+  latestCommitId String?
+
+  //Relations 
+  commits Commit[]
+  publishing Publishing[]
+}
+
+//Commit
+
+model Commit{
+  id String @id @default(uuid())
+  message String
+  content String @db.Text
+  wordCount Int @default(0)
+  createdAt DateTime @default(now())
+
+  //Branch
+  branchId String
+  branch Branch @relation(fields: [branchId],references : [id], onDelete: Cascade)
+
+  //Author 
+  authorId String
+  author User @relation(fields: [authorId], references: [id])
+
+  //Parent commit 
+
+  parentId String?
+  parent Commit? @relation("CommitHistory", fields: [parentId], references: [id])
+  children Commit[] @relation("CommitHistory")
+}
+
+// Collaborator
+
+model Collaborator {
+  id String @id @default(uuid())
+  role Role @default(VIEWER)
+  createdAt DateTime @default(now())
+
+  storyId String
+  story Story @relation(fields: [storyId], references: [id], onDelete: Cascade)
+
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([storyId,userId])
+}
+
+// Fork 
+
+model Fork {
+  id String @id @default(uuid())
+  createdAt DateTime @default(now())
+
+  sourceStoryId String
+  sourceStory Story @relation(fields: [sourceStoryId], references: [id], onDelete: Cascade)
+
+  forkedById String 
+  forkedBy User @relation("ForkedBy",fields: [forkedById], references: [id], onDelete: Cascade)
+
+  @@unique([sourceStoryId, forkedById])
+}
+
+// Publishing
+
+model Publishing {
+  id String @id @default(uuid())
+  finalContent String @db.Text
+  publishedAt DateTime @default(now())
+  isActive Boolean @default(true)
+
+  branchId String
+  branch Branch @relation(fields: [branchId], references: [id], onDelete: Cascade)
+}
+
+// Rating
+
+model Rating {
+  id String @id @default(uuid())
+  stars Int
+  createdAt DateTime @default(now())
+
+  publishingId String
+  userId String
+  user User @relation(fields: [userId], references: [id],onDelete: Cascade)
+
+  @@unique([publishingId, userId])
+}
+
+//ENUMS
+
+enum Role {
+  VIEWER
+  EDITOR
+}
+
