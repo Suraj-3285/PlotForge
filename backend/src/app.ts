@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { errorHandler } from './middlewares/error.middleware';
+import authRoutes from './routes/auth.routes';
 
 dotenv.config();
 
@@ -17,10 +18,11 @@ app.use(express.urlencoded({ extended: true }));
 
 // Health check
 app.get('/', (req, res) => {
-  res.json({ message: 'ForkTale API is running 🚀' });
+  res.json({ message: 'PlotForge API is running 🚀' });
 });
 
-// Routes will come here one by one as we build
+//Routes
+app.use('/api/auth', authRoutes);
 
 app.use(errorHandler);
 const PORT = process.env.PORT || 5000;
