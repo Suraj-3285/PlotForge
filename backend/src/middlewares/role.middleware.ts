@@ -8,7 +8,7 @@ export const requireEditor = async (
     next: NextFunction
 ) => {
     try {
-        const storyId = req.params.storyId;
+        const storyId = req.params.storyId as string;
         const userId = req.user!.id;
 
         const story = await prisma.story.findUnique({
