@@ -7,6 +7,7 @@ import userRoutes from './routes/user.routes';
 import storyRoutes from './routes/story.routes';
 import branchRoutes from './routes/branch.routes';
 import commitRoutes from './routes/commit.routes';
+import forkRoutes from './routes/fork.routes';
 
 dotenv.config();
 
@@ -31,6 +32,8 @@ app.use('/api/users',userRoutes);
 app.use('/api/stories',storyRoutes);
 app.use('/api/stories/:storyId/branches', branchRoutes);
 app.use('/api/stories/:storyId/branches/:branchId/commits', commitRoutes);
+app.use('/api/stories', forkRoutes);
+app.use('/api/forks', forkRoutes);
 
 app.use(errorHandler);
 const PORT = process.env.PORT || 5000;
