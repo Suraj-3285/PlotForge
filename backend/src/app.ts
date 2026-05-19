@@ -10,6 +10,7 @@ import commitRoutes from './routes/commit.routes';
 import forkRoutes from './routes/fork.routes';
 import collaborateRoutes from './routes/collaborate.routes';
 import publishRoutes from './routes/publish.routes';
+import ratingRoutes from './routes/rating.routes';
 
 dotenv.config();
 
@@ -42,6 +43,8 @@ app.use("/api/collaborations", collaborateRoutes);
 
 app.use('/api/stories',publishRoutes);
 app.use('/api',publishRoutes);
+
+app.use('/api/endings',ratingRoutes);
 
 app.use(errorHandler);
 const PORT = process.env.PORT || 5000;
