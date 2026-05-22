@@ -1,7 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import { errorHandler } from './middlewares/error.middleware';
+
+//routes
 import authRoutes from './routes/auth.routes';
 import userRoutes from './routes/user.routes';
 import storyRoutes from './routes/story.routes';
@@ -12,12 +13,16 @@ import collaborateRoutes from './routes/collaborate.routes';
 import publishRoutes from './routes/publish.routes';
 import ratingRoutes from './routes/rating.routes';
 import aiRoutes from './routes/ai.routes';
+import exportRoutes from './routes/export.routes';
+
+//middlewares
+import { errorHandler } from './middlewares/error.middleware';
 
 dotenv.config();
 
 const app = express();
 
-// Middlewares
+// Global Middlewares
 app.use(cors({
   origin: process.env.CLIENT_URL,
   credentials: true
@@ -49,6 +54,9 @@ app.use('/api/endings',ratingRoutes);
 
 app.use('/api/ai',aiRoutes);
 
+app.use('/api/stories', exportRoutes);
+
+// error handler
 app.use(errorHandler);
 const PORT = process.env.PORT || 5000;
 
