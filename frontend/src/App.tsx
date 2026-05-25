@@ -1,122 +1,164 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { BrowserRouter,Routes,Route,Navigate,Outlet, } from "react-router-dom";
+import type { ReactNode } from "react";
+import { useAuth } from "./context/AuthContext";
 
-function App() {
-  const [count, setCount] = useState(0)
+// Pages
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Dashboard from "./pages/Dashboard";
+import Profile from "./pages/Profile";
+import StoryCreate from "./pages/StoryCreate";
+import StoryEdit from "./pages/StoryEdit";
+import StoryRead from "./pages/StoryRead";
+import BranchView from "./pages/BranchView";
+import CommitHistory from "./pages/CommitHistory";
+import Discover from "./pages/Discover";
+import Collaborate from "./pages/Collaborate";
+import Navbar from "./components/layout/Navbar";
 
+//Protected Route
+const ProtectedRoute = ({ children }: { children: ReactNode }) => {
+  const { isAuthenticated, isLoading } = useAuth();
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-dark-100 flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-primary-500 border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  return isAuthenticated ? <>{children}</> : <Navigate to="/login" replace />;
+};
+
+//Public Route
+const PublicRoute = ({ children }: { children: ReactNode }) => {
+  const { isAuthenticated, isLoading } = useAuth();
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-dark-100 flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-primary-500 border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  return isAuthenticated ? (
+    <Navigate to="/dashboard" replace />
+  ) : (
+    <>{children}</>
+  );
+};
+
+//Layout with Navbar
+
+function WithNavbar() {
   return (
     <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
+      <Navbar />
+      <main>
+        <Outlet />
+      </main>
     </>
-  )
+  );
 }
 
-export default App
+//App
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <div className="min-h-screen bg-dark-100">
+        <Routes>
+          {/* no navbar in public routes */}
+          <Route
+            path="/"
+            element={
+              <PublicRoute>
+                <Home />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/login"
+            element={
+              <PublicRoute>
+                <Login />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/register"
+            element={
+              <PublicRoute>
+                <Register />
+              </PublicRoute>
+            }
+          />
+
+          {/* Routes with Navbar */}
+          <Route element={<WithNavbar />}>
+            {/* Public */}
+            <Route path="/discover" element={<Discover />} />
+            <Route path="/stories/:storyId/read" element={<StoryRead />} />
+            <Route path="/u/:username" element={<Profile />} />
+
+            {/* Protected */}
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/stories/create"
+              element={
+                <ProtectedRoute>
+                  <StoryCreate />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/stories/:storyId/edit"
+              element={
+                <ProtectedRoute>
+                  <StoryEdit />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/stories/:storyId/branches/:branchId"
+              element={
+                <ProtectedRoute>
+                  <BranchView />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/stories/:storyId/commits"
+              element={
+                <ProtectedRoute>
+                  <CommitHistory />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/stories/:storyId/collaborate"
+              element={
+                <ProtectedRoute>
+                  <Collaborate />
+                </ProtectedRoute>
+              }
+            />
+          </Route>
+
+          {/* 404 */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </div>
+    </BrowserRouter>
+  );
+}

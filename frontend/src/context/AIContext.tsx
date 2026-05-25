@@ -41,7 +41,7 @@ export const AIProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-//Hook
+//Custom Hook
 export const useAi = () => {
   const context = useContext(AIContext);
   if (!context) {
