@@ -1,105 +1,35 @@
-import { useRef } from "react";
-import { Link } from "react-router-dom";
-import { motion, useInView } from "framer-motion";
-import { GitBranch,GitFork,Sparkles,BookOpen,Users,ArrowRight,Zap,Globe, } from "lucide-react";
+import { useRef } from 'react';
+import { Link } from 'react-router-dom';
+import { motion, useInView } from 'framer-motion';
+import {
+  GitBranch,
+  GitFork,
+  Sparkles,
+  BookOpen,
+  Users,
+  ArrowRight,
+  Zap,
+  Globe,
+} from 'lucide-react';
 
-//Animation Variants
 const fadeUp = {
-  hidden: { opacity: 0, y: 40 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, ease: "easeOut" as const },
-  },
+  hidden: { opacity: 0, y: 16 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: 'easeOut' } },
 };
 
 const stagger = {
-  visible: {
-    transition: {
-      staggerChildren: 0.15,
-    },
-  },
+  visible: { transition: { staggerChildren: 0.08 } },
 };
 
-//Feature Card
-
-const features = [
-  {
-    icon: <GitBranch size={24} />,
-    title: "Branch Your Story",
-    description:
-      'Create alternate timelines and narrative branches. Every "what if" becomes its own story path.',
-    color: "from-blue-500 to-indigo-600",
-    glow: "shadow-blue-500/20",
-  },
-  {
-    icon: <GitFork size={24} />,
-    title: "Fork & Continue",
-    description:
-      "Love a story but want to take it somewhere new? Fork it and write your own ending.",
-    color: "from-purple-500 to-pink-600",
-    glow: "shadow-purple-500/20",
-  },
-  {
-    icon: <Sparkles size={24} />,
-    title: "AI Co-Author",
-    description:
-      "Get real-time AI suggestions, plot twists, grammar fixes and writing improvements as you type.",
-    color: "from-amber-500 to-orange-600",
-    glow: "shadow-amber-500/20",
-  },
-  {
-    icon: <Users size={24} />,
-    title: "Collaborate",
-    description:
-      "Invite co-authors with role-based access. Editors write, viewers read — you stay in control.",
-    color: "from-green-500 to-teal-600",
-    glow: "shadow-green-500/20",
-  },
-  {
-    icon: <BookOpen size={24} />,
-    title: "Multiple Endings",
-    description:
-      "Publish different branches as different endings. Let readers choose their own adventure.",
-    color: "from-red-500 to-rose-600",
-    glow: "shadow-red-500/20",
-  },
-  {
-    icon: <Globe size={24} />,
-    title: "Discover Stories",
-    description:
-      "Browse a world of collaborative fiction. Rate endings, fork favourites, join the community.",
-    color: "from-cyan-500 to-blue-600",
-    glow: "shadow-cyan-500/20",
-  },
-];
-
-//Stats
-
-const stats = [
-  { value: "Git-Inspired", label: "Version Control" },
-  { value: "AI-Powered", label: "Writing Assistant" },
-  { value: "Multi-Ending", label: "Story Branches" },
-  { value: "Real-Time", label: "Collaboration" },
-];
-
-//Section Wrapper
-function AnimatedSection({
-  children,
-  className = "",
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
+function Section({ children, className = '' }: { children: React.ReactNode; className?: string }) {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
-
+  const inView = useInView(ref, { once: true, margin: '-80px' });
   return (
     <motion.div
       ref={ref}
       variants={stagger}
       initial="hidden"
-      animate={isInView ? "visible" : "hidden"}
+      animate={inView ? 'visible' : 'hidden'}
       className={className}
     >
       {children}
@@ -107,454 +37,466 @@ function AnimatedSection({
   );
 }
 
-//HomePage
+const features = [
+  {
+    icon: <GitBranch size={16} />,
+    title: 'Branch your story',
+    description: 'Create alternate timelines. Every "what if" becomes its own narrative path.',
+    accent: '#8dd6ff',
+  },
+  {
+    icon: <GitFork size={16} />,
+    title: 'Fork & continue',
+    description: 'Clone any published story and take it somewhere completely new.',
+    accent: '#8c93fb',
+  },
+  {
+    icon: <Sparkles size={16} />,
+    title: 'AI co-author',
+    description: 'Real-time suggestions, plot twists and grammar fixes as you write.',
+    accent: '#5fed83',
+  },
+  {
+    icon: <Users size={16} />,
+    title: 'Collaborate',
+    description: 'Invite co-authors with role-based access. You stay in control.',
+    accent: '#8dd6ff',
+  },
+  {
+    icon: <BookOpen size={16} />,
+    title: 'Multiple endings',
+    description: 'Publish different branches as different endings. Readers choose their path.',
+    accent: '#8c93fb',
+  },
+  {
+    icon: <Globe size={16} />,
+    title: 'Discover',
+    description: 'Browse collaborative fiction. Rate endings, fork favourites.',
+    accent: '#5fed83',
+  },
+];
 
 export default function Home() {
   return (
-    <div className="min-h-screen overflow-hidden">
-      {/*BackGround Effects */}
-      <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary-600/10 rounded-full blur-3xl" />
-        <div className="absolute top-1/3 right-1/4 w-80 h-80 bg-purple-600/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 left-1/3 w-64 h-64 bg-pink-600/5 rounded-full blur-3xl" />
-      </div>
+    <div className="min-h-screen" style={{ background: '#08090a' }}>
 
-      {/* Hero Section */}
-      <section className="relative min-h-screen flex flex-col items-center justify-center px-4 pt-20">
+      {/* ════════════════════════════════
+          HERO
+      ════════════════════════════════ */}
+      <section className="relative min-h-screen flex flex-col items-center justify-center px-4 pt-14">
+
+        {/* Subtle background gradient */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: 'radial-gradient(ellipse 80% 50% at 50% -10%, rgba(141, 214, 255, 0.05) 0%, transparent 60%)',
+          }}
+        />
+
         {/* Badge */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.4 }}
           className="mb-8"
         >
-          <span className="inline-flex items-center gap-2 glass border border-primary-500/30 text-primary-400 text-sm font-medium px-4 py-2 rounded-full">
-            <Zap size={14} className="animate-pulse" />
-            Git-Inspired Collaborative Storytelling
+          <span
+            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium"
+            style={{
+              background: 'rgba(141, 214, 255, 0.06)',
+              border: '1px solid rgba(141, 214, 255, 0.15)',
+              color: '#8dd6ff',
+              letterSpacing: '-0.1px',
+            }}
+          >
+            <Zap size={11} />
+            Git-inspired collaborative storytelling
           </span>
         </motion.div>
 
         {/* Headline */}
         <motion.h1
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="text-5xl md:text-7xl font-bold text-center max-w-4xl leading-tight mb-6"
+          transition={{ duration: 0.5, delay: 0.08 }}
+          className="text-center font-semibold max-w-3xl mb-5"
+          style={{
+            fontSize: 'clamp(40px, 7vw, 72px)',
+            lineHeight: '1',
+            letterSpacing: '-0.22px',
+            color: '#f7f8f8',
+          }}
         >
-          Where Stories
-          <span className="block gradient-text">Branch & Evolve</span>
+          Where stories
+          <br />
+          <span style={{ color: '#8dd6ff' }}>branch and evolve</span>
         </motion.h1>
 
-        {/* Subheadline */}
+        {/* Sub */}
         <motion.p
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="text-lg md:text-xl text-white/50 text-center max-w-2xl mb-10 leading-relaxed"
+          transition={{ duration: 0.4, delay: 0.16 }}
+          className="text-center max-w-lg mb-10"
+          style={{
+            color: '#8a8f98',
+            fontSize: '15px',
+            lineHeight: '1.6',
+            letterSpacing: '-0.1px',
+          }}
         >
-          ForkTale brings the power of Git version control to collaborative
-          fiction. Branch timelines, fork stories, commit chapters — and let AI
+          ForkTale brings Git version control to collaborative fiction.
+          Branch timelines, fork stories, commit chapters — and let AI
           help you write what comes next.
         </motion.p>
 
-        {/* CTA Buttons */}
+        {/* CTAs */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="flex flex-col sm:flex-row gap-4 mb-16"
+          transition={{ duration: 0.4, delay: 0.22 }}
+          className="flex flex-col sm:flex-row gap-3 mb-20"
         >
           <Link to="/register">
             <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="btn-primary text-base px-8 py-4 shadow-glow-lg"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="btn-primary px-5 py-2.5 text-sm font-semibold flex items-center gap-2"
             >
-              Start Writing Free
-              <ArrowRight size={18} />
+              Start writing free
+              <ArrowRight size={14} />
             </motion.button>
           </Link>
-
           <Link to="/discover">
             <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="btn-secondary text-base px-8 py-4"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="btn-secondary px-5 py-2.5 text-sm flex items-center gap-2"
             >
-              <BookOpen size={18} />
-              Browse Stories
+              <BookOpen size={14} />
+              Browse stories
             </motion.button>
           </Link>
         </motion.div>
 
-        {/* Git Branch Diagram */}
+        {/* Hero terminal */}
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="relative w-full max-w-3xl"
+          transition={{ duration: 0.5, delay: 0.3 }}
+          className="w-full max-w-2xl"
         >
-          <div className="glass rounded-3xl border border-white/10 p-8 shadow-card">
-            {/* Fake terminal header */}
-            <div className="flex items-center gap-2 mb-6">
-              <div className="w-3 h-3 rounded-full bg-red-500" />
-              <div className="w-3 h-3 rounded-full bg-yellow-500" />
-              <div className="w-3 h-3 rounded-full bg-green-500" />
-              <span className="ml-3 text-white/30 text-xs font-mono">
+          <div
+            className="rounded-lg overflow-hidden"
+            style={{
+              background: '#0f1011',
+              border: '1px solid #23252a',
+              boxShadow: 'rgba(8, 9, 10, 0.6) 0px 4px 32px 0px',
+            }}
+          >
+            {/* Terminal bar */}
+            <div
+              className="flex items-center gap-2 px-4 py-3"
+              style={{ borderBottom: '1px solid #23252a' }}
+            >
+              <div className="w-2.5 h-2.5 rounded-full" style={{ background: '#383b3f' }} />
+              <div className="w-2.5 h-2.5 rounded-full" style={{ background: '#383b3f' }} />
+              <div className="w-2.5 h-2.5 rounded-full" style={{ background: '#383b3f' }} />
+              <span
+                className="ml-3 font-mono"
+                style={{ color: '#62666d', fontSize: '12px' }}
+              >
                 forktale — story-editor
               </span>
             </div>
 
-            {/* Branch visualization */}
-            <div className="font-mono text-sm space-y-3">
+            {/* Branch commits */}
+            <div className="p-5 space-y-3">
               {[
-                {
-                  color: "text-blue-400",
-                  dot: "bg-blue-400",
-                  line: true,
-                  text: "main",
-                  msg: "The kingdom falls into darkness",
-                },
-                {
-                  color: "text-blue-400",
-                  dot: "bg-blue-400",
-                  line: true,
-                  text: "main",
-                  msg: "The prince sets out on his journey",
-                },
-                {
-                  color: "text-purple-400",
-                  dot: "bg-purple-400",
-                  line: false,
-                  text: "dark-ending",
-                  msg: "The witch claims her final victory",
-                },
-                {
-                  color: "text-blue-400",
-                  dot: "bg-blue-400",
-                  line: true,
-                  text: "main",
-                  msg: "Light returns to the kingdom",
-                },
-                {
-                  color: "text-green-400",
-                  dot: "bg-green-400",
-                  line: false,
-                  text: "hero-ending",
-                  msg: "The prince breaks the curse forever",
-                },
+                { branch: 'main', color: '#8dd6ff', msg: 'The kingdom falls into darkness' },
+                { branch: 'main', color: '#8dd6ff', msg: 'The prince sets out on his journey' },
+                { branch: 'dark-ending', color: '#8c93fb', msg: 'The witch claims her final victory' },
+                { branch: 'main', color: '#8dd6ff', msg: 'Light returns to the kingdom' },
+                { branch: 'hero-ending', color: '#5fed83', msg: 'The prince breaks the curse forever' },
               ].map((item, i) => (
                 <motion.div
                   key={i}
-                  initial={{ opacity: 0, x: -20 }}
+                  initial={{ opacity: 0, x: -8 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.6 + i * 0.1 }}
+                  transition={{ delay: 0.5 + i * 0.08 }}
                   className="flex items-center gap-3"
                 >
                   <div
-                    className={`w-3 h-3 rounded-full ${item.dot} shadow-lg flex-shrink-0`}
+                    className="w-2 h-2 rounded-full flex-shrink-0"
+                    style={{ background: item.color }}
                   />
-
-                  <span className={`text-xs ${item.color} w-24 flex-shrink-0`}>
-                    {item.text}
+                  <span
+                    className="font-mono text-xs w-24 flex-shrink-0"
+                    style={{ color: item.color }}
+                  >
+                    {item.branch}
                   </span>
-
-                  <span className="text-white/40 text-xs truncate">
+                  <span style={{ color: '#62666d', fontSize: '13px' }}>
                     {item.msg}
                   </span>
                 </motion.div>
               ))}
 
-              {/* AI suggestion line */}
+              {/* AI line */}
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 1.2 }}
-                className="flex items-center gap-3 mt-4 pt-4 border-t border-white/5"
+                transition={{ delay: 1.1 }}
+                className="flex items-center gap-3 pt-3"
+                style={{ borderTop: '1px solid #23252a' }}
               >
-                <Sparkles size={12} className="text-purple-400 animate-pulse" />
-
-                <span className="text-purple-400/70 text-xs">
-                  AI suggesting: "A mysterious stranger appears at the gate..."
+                <Sparkles size={12} style={{ color: '#5fed83' }} />
+                <span style={{ color: '#8a8f98', fontSize: '12px', fontFamily: 'monospace' }}>
+                  AI: "A mysterious stranger appears at the gate..."
                 </span>
-
-                <span className="w-1 h-4 bg-purple-400 animate-pulse ml-1" />
+                <span
+                  className="inline-block w-0.5 h-3.5"
+                  style={{ background: '#5fed83', animation: 'pulse 1s infinite' }}
+                />
               </motion.div>
             </div>
           </div>
-
-          {/* Floating badges */}
-          <motion.div
-            animate={{ y: [0, -8, 0] }}
-            transition={{
-              duration: 3,
-              repeat: Infinity,
-              ease: "easeInOut" as const,
-            }}
-            className="absolute -top-4 -right-4 glass border border-green-500/30 text-green-400 text-xs px-3 py-1.5 rounded-full shadow-lg"
-          >
-            ✓ Committed
-          </motion.div>
-
-          <motion.div
-            animate={{ y: [0, 8, 0] }}
-            transition={{
-              duration: 3,
-              repeat: Infinity,
-              ease: "easeInOut" as const,
-              delay: 1,
-            }}
-            className="absolute -bottom-4 -left-4 glass border border-purple-500/30 text-purple-400 text-xs px-3 py-1.5 rounded-full shadow-lg"
-          >
-            ⎇ Branched
-          </motion.div>
-        </motion.div>
-
-        {/* Scroll indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.5 }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2"
-        >
-          <motion.div
-            animate={{ y: [0, 8, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
-            className="w-6 h-10 border-2 border-white/20 rounded-full flex items-start justify-center pt-2"
-          >
-            <div className="w-1 h-2 bg-white/40 rounded-full" />
-          </motion.div>
         </motion.div>
       </section>
 
-      {/* Stats Section */}
-      <section className="relative py-16 px-4">
-        <AnimatedSection className="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6">
-          {stats.map((stat) => (
-            <motion.div
-              key={stat.label}
-              variants={fadeUp}
-              className="card text-center"
-            >
-              <div className="text-2xl font-bold gradient-text mb-1">
-                {stat.value}
-              </div>
-
-              <div className="text-white/40 text-sm">{stat.label}</div>
+      {/* ════════════════════════════════
+          FEATURES
+      ════════════════════════════════ */}
+      <section className="py-24 px-4">
+        <div className="max-w-5xl mx-auto">
+          <Section>
+            <motion.div variants={fadeUp} className="mb-12">
+              <p
+                className="text-xs font-medium uppercase tracking-widest mb-3"
+                style={{ color: '#8dd6ff' }}
+              >
+                Features
+              </p>
+              <h2
+                className="font-semibold max-w-md"
+                style={{
+                  fontSize: '32px',
+                  lineHeight: '1.2',
+                  letterSpacing: '-0.22px',
+                  color: '#f7f8f8',
+                }}
+              >
+                Everything a story needs
+              </h2>
             </motion.div>
-          ))}
-        </AnimatedSection>
-      </section>
 
-      {/* Feature Section */}
-      <section className="relative py-24 px-4">
-        <AnimatedSection className="max-w-7xl mx-auto">
-          {/* Section header */}
-          <motion.div variants={fadeUp} className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              Everything a story needs
-            </h2>
-
-            <p className="text-white/40 text-lg max-w-xl mx-auto">
-              Built for writers who think in possibilities, not just chapters.
-            </p>
-          </motion.div>
-
-          {/* Feature grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {features.map((feature) => (
-              <motion.div
-                key={feature.title}
-                variants={fadeUp}
-                whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                className="card group cursor-default"
-              >
-                {/* Icon */}
-                <div
-                  className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${feature.color} flex items-center justify-center mb-4 shadow-lg ${feature.glow} group-hover:scale-110 transition-transform duration-300`}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px"
+              style={{ background: '#23252a', border: '1px solid #23252a', borderRadius: '8px', overflow: 'hidden' }}
+            >
+              {features.map((f) => (
+                <motion.div
+                  key={f.title}
+                  variants={fadeUp}
+                  className="p-6 group transition-colors duration-150"
+                  style={{ background: '#0f1011' }}
+                  onMouseEnter={e => (e.currentTarget.style.background = '#161718')}
+                  onMouseLeave={e => (e.currentTarget.style.background = '#0f1011')}
                 >
-                  <span className="text-white">{feature.icon}</span>
-                </div>
-
-                <h3 className="text-lg font-semibold mb-2">{feature.title}</h3>
-
-                <p className="text-white/40 text-sm leading-relaxed">
-                  {feature.description}
-                </p>
-              </motion.div>
-            ))}
-          </div>
-        </AnimatedSection>
-      </section>
-
-      {/* How it works */}
-      <section className="relative py-24 px-4">
-        <AnimatedSection className="max-w-4xl mx-auto">
-          <motion.div variants={fadeUp} className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              How it works
-            </h2>
-
-            <p className="text-white/40 text-lg">
-              Like Git, but for your imagination.
-            </p>
-          </motion.div>
-
-          <div className="space-y-4">
-            {[
-              {
-                step: "01",
-                title: "Create a story",
-                description:
-                  "Start a new story. A main branch is created automatically — just like a Git repo.",
-                color: "text-blue-400",
-                border: "border-blue-500/20",
-                bg: "bg-blue-500/5",
-              },
-              {
-                step: "02",
-                title: "Write and commit",
-                description:
-                  "Write your chapters and save them as commits with a message. Every version is preserved forever.",
-                color: "text-purple-400",
-                border: "border-purple-500/20",
-                bg: "bg-purple-500/5",
-              },
-              {
-                step: "03",
-                title: "Branch for alternate paths",
-                description:
-                  "Create a branch to explore a different direction without affecting your main story.",
-                color: "text-green-400",
-                border: "border-green-500/20",
-                bg: "bg-green-500/5",
-              },
-              {
-                step: "04",
-                title: "Publish your endings",
-                description:
-                  "Publish any branch as a story ending. Readers can choose which path to follow.",
-                color: "text-amber-400",
-                border: "border-amber-500/20",
-                bg: "bg-amber-500/5",
-              },
-            ].map((item) => (
-              <motion.div
-                key={item.step}
-                variants={fadeUp}
-                whileHover={{ x: 4 }}
-                className={`flex items-start gap-6 p-6 rounded-2xl border ${item.border} ${item.bg} transition-all duration-200`}
-              >
-                <span
-                  className={`text-4xl font-bold ${item.color} opacity-40 flex-shrink-0 font-mono`}
-                >
-                  {item.step}
-                </span>
-
-                <div>
-                  <h3 className="text-lg font-semibold mb-1">{item.title}</h3>
-
-                  <p className="text-white/40 text-sm leading-relaxed">
-                    {item.description}
+                  <div
+                    className="w-7 h-7 rounded flex items-center justify-center mb-4"
+                    style={{
+                      background: `${f.accent}12`,
+                      border: `1px solid ${f.accent}25`,
+                      color: f.accent,
+                    }}
+                  >
+                    {f.icon}
+                  </div>
+                  <h3
+                    className="font-medium mb-2"
+                    style={{ color: '#f7f8f8', fontSize: '14px' }}
+                  >
+                    {f.title}
+                  </h3>
+                  <p style={{ color: '#8a8f98', fontSize: '13px', lineHeight: '1.5' }}>
+                    {f.description}
                   </p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </AnimatedSection>
+                </motion.div>
+              ))}
+            </div>
+          </Section>
+        </div>
       </section>
 
-      {/* CTA Section */}
+      {/* ════════════════════════════════
+          HOW IT WORKS
+      ════════════════════════════════ */}
+      <section className="py-24 px-4">
+        <div className="max-w-3xl mx-auto">
+          <Section>
+            <motion.div variants={fadeUp} className="mb-12">
+              <p
+                className="text-xs font-medium uppercase tracking-widest mb-3"
+                style={{ color: '#8dd6ff' }}
+              >
+                How it works
+              </p>
+              <h2
+                className="font-semibold"
+                style={{
+                  fontSize: '32px',
+                  lineHeight: '1.2',
+                  letterSpacing: '-0.22px',
+                  color: '#f7f8f8',
+                }}
+              >
+                Like Git, but for your imagination
+              </h2>
+            </motion.div>
 
-      <section className="relative py-24 px-4">
-        <AnimatedSection className="max-w-3xl mx-auto text-center">
+            <div className="space-y-2">
+              {[
+                {
+                  step: '01',
+                  title: 'Create a story',
+                  desc: 'Start a new story. A main branch is created automatically.',
+                },
+                {
+                  step: '02',
+                  title: 'Write and commit',
+                  desc: 'Save chapters as commits with a message. Every version preserved.',
+                },
+                {
+                  step: '03',
+                  title: 'Branch alternate paths',
+                  desc: 'Explore a different direction without affecting your main story.',
+                },
+                {
+                  step: '04',
+                  title: 'Publish your endings',
+                  desc: 'Publish any branch as an ending. Readers choose their path.',
+                },
+              ].map((item) => (
+                <motion.div
+                  key={item.step}
+                  variants={fadeUp}
+                  className="flex items-start gap-6 px-5 py-4 rounded transition-colors duration-150"
+                  style={{ border: '1px solid #23252a' }}
+                  onMouseEnter={e => (e.currentTarget.style.background = '#0f1011')}
+                  onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+                >
+                  <span
+                    className="font-mono text-sm flex-shrink-0 mt-0.5"
+                    style={{ color: '#383b3f' }}
+                  >
+                    {item.step}
+                  </span>
+                  <div>
+                    <h3
+                      className="font-medium mb-1"
+                      style={{ color: '#f7f8f8', fontSize: '14px' }}
+                    >
+                      {item.title}
+                    </h3>
+                    <p style={{ color: '#8a8f98', fontSize: '13px', lineHeight: '1.5' }}>
+                      {item.desc}
+                    </p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </Section>
+        </div>
+      </section>
+
+      {/* ════════════════════════════════
+          CTA
+      ════════════════════════════════ */}
+      <section className="py-24 px-4">
+        <Section className="max-w-2xl mx-auto">
           <motion.div
             variants={fadeUp}
-            className="glass rounded-3xl border border-white/10 p-12 relative overflow-hidden"
+            className="text-center p-12 rounded-lg"
+            style={{
+              background: '#0f1011',
+              border: '1px solid #23252a',
+              boxShadow: 'rgba(8, 9, 10, 0.6) 0px 4px 32px 0px',
+            }}
           >
-            <div className="absolute inset-0 bg-gradient-to-br from-primary-600/10 to-purple-600/10 pointer-events-none" />
-
-            <motion.div variants={fadeUp}>
-              <GitBranch
-                size={48}
-                className="text-primary-400 mx-auto mb-6 animate-float"
-              />
-            </motion.div>
-
-            <motion.h2
-              variants={fadeUp}
-              className="text-4xl md:text-5xl font-bold mb-4"
+            <GitBranch
+              size={28}
+              className="mx-auto mb-6"
+              style={{ color: '#8dd6ff' }}
+            />
+            <h2
+              className="font-semibold mb-3"
+              style={{
+                fontSize: '28px',
+                letterSpacing: '-0.22px',
+                color: '#f7f8f8',
+              }}
             >
-              Ready to write your
-              <span className="gradient-text"> first branch?</span>
-            </motion.h2>
-
-            <motion.p variants={fadeUp} className="text-white/40 text-lg mb-8">
-              Join ForkTale and start building stories that live, breathe and
-              evolve.
-            </motion.p>
-
-            <motion.div
-              variants={fadeUp}
-              className="flex flex-col sm:flex-row gap-4 justify-center"
+              Ready to write your first branch?
+            </h2>
+            <p
+              className="mb-8"
+              style={{ color: '#8a8f98', fontSize: '14px', lineHeight: '1.6' }}
             >
+              Join ForkTale and start building stories that live, breathe and evolve.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Link to="/register">
                 <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="btn-primary text-base px-8 py-4 shadow-glow-lg"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="btn-primary px-5 py-2.5 text-sm font-semibold flex items-center gap-2"
                 >
-                  Start Writing Free
-                  <ArrowRight size={18} />
+                  Start writing free
+                  <ArrowRight size={14} />
                 </motion.button>
               </Link>
-
               <Link to="/discover">
                 <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="btn-secondary text-base px-8 py-4"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="btn-secondary px-5 py-2.5 text-sm flex items-center gap-2"
                 >
-                  Browse Stories
+                  Browse stories
                 </motion.button>
               </Link>
-            </motion.div>
+            </div>
           </motion.div>
-        </AnimatedSection>
+        </Section>
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-white/5 py-8 px-4">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+      <footer
+        className="py-8 px-4"
+        style={{ borderTop: '1px solid #23252a' }}
+      >
+        <div className="max-w-6xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <GitBranch size={16} className="text-primary-400" />
-
-            <span className="text-white/40 text-sm">
+            <GitBranch size={13} style={{ color: '#8dd6ff' }} />
+            <span style={{ color: '#62666d', fontSize: '13px' }}>
               ForkTale — Where stories branch and evolve
             </span>
           </div>
-
-          <div className="flex items-center gap-6">
-            <Link
-              to="/discover"
-              className="text-white/30 hover:text-white/60 text-sm transition-colors"
-            >
-              Discover
-            </Link>
-
-            <Link
-              to="/register"
-              className="text-white/30 hover:text-white/60 text-sm transition-colors"
-            >
-              Sign Up
-            </Link>
-
-            <Link
-              to="/login"
-              className="text-white/30 hover:text-white/60 text-sm transition-colors"
-            >
-              Log In
-            </Link>
+          <div className="flex items-center gap-5">
+            {[
+              { label: 'Discover', to: '/discover' },
+              { label: 'Sign up', to: '/register' },
+              { label: 'Log in', to: '/login' },
+            ].map(link => (
+              <Link
+                key={link.to}
+                to={link.to}
+                style={{ color: '#62666d', fontSize: '13px' }}
+                onMouseEnter={e => ((e.target as HTMLElement).style.color = '#8a8f98')}
+                onMouseLeave={e => ((e.target as HTMLElement).style.color = '#62666d')}
+              >
+                {link.label}
+              </Link>
+            ))}
           </div>
         </div>
       </footer>
