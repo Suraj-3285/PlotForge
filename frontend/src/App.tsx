@@ -1,57 +1,49 @@
-import { BrowserRouter,Routes,Route,Navigate,Outlet, } from "react-router-dom";
-import type { ReactNode } from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
+import { Suspense, lazy } from "react";
+import { Loader2 } from "lucide-react";
 
-// Pages
-import Home from "./pages/Home";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Dashboard from "./pages/Dashboard";
-import Profile from "./pages/Profile";
-import StoryCreate from "./pages/StoryCreate";
-import StoryEdit from "./pages/StoryEdit";
-import StoryRead from "./pages/StoryRead";
-import BranchView from "./pages/BranchView";
-import CommitHistory from "./pages/CommitHistory";
-import Discover from "./pages/Discover";
-import Collaborate from "./pages/Collaborate";
+const Home = lazy(() => import("./pages/Home"));
+const Login = lazy(() => import("./pages/Login"));
+const Register = lazy(() => import("./pages/Register"));
+const Dashboard = lazy(() => import("./pages/Dashboard"));
+const Profile = lazy(() => import("./pages/Profile"));
+const StoryCreate = lazy(() => import("./pages/StoryCreate"));
+const StoryEdit = lazy(() => import("./pages/StoryEdit"));
+const StoryRead = lazy(() => import("./pages/StoryRead"));
+const BranchView = lazy(() => import("./pages/BranchView"));
+const CommitHistory = lazy(() => import("./pages/CommitHistory"));
+const Discover = lazy(() => import("./pages/Discover"));
+const Collaborate = lazy(() => import("./pages/Collaborate"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+
 import Navbar from "./components/layout/Navbar";
+import { Outlet } from "react-router-dom";
 
-//Protected Route
-const ProtectedRoute = ({ children }: { children: ReactNode }) => {
+const PageLoader = () => (
+  <div
+    className="min-h-screen flex items-center justify-center"
+    style={{ background: "#08090a" }}
+  >
+    <Loader2 size={18} className="animate-spin" style={{ color: "#8a8f98" }} />
+  </div>
+);
+
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { isAuthenticated, isLoading } = useAuth();
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-dark-100 flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-primary-500 border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
-  }
-
+  if (isLoading) return <PageLoader />;
   return isAuthenticated ? <>{children}</> : <Navigate to="/login" replace />;
 };
 
-//Public Route
-const PublicRoute = ({ children }: { children: ReactNode }) => {
+const PublicRoute = ({ children }: { children: React.ReactNode }) => {
   const { isAuthenticated, isLoading } = useAuth();
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-dark-100 flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-primary-500 border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
-  }
-
+  if (isLoading) return <PageLoader />;
   return isAuthenticated ? (
     <Navigate to="/dashboard" replace />
   ) : (
     <>{children}</>
   );
 };
-
-//Layout with Navbar
 
 function WithNavbar() {
   return (
@@ -64,101 +56,100 @@ function WithNavbar() {
   );
 }
 
-//App
-
 export default function App() {
   return (
     <BrowserRouter>
-      <div className="min-h-screen bg-dark-100">
-        <Routes>
-          {/* no navbar in public routes */}
-          <Route
-            path="/"
-            element={
-              <PublicRoute>
-                <Home />
-              </PublicRoute>
-            }
-          />
-          <Route
-            path="/login"
-            element={
-              <PublicRoute>
-                <Login />
-              </PublicRoute>
-            }
-          />
-          <Route
-            path="/register"
-            element={
-              <PublicRoute>
-                <Register />
-              </PublicRoute>
-            }
-          />
-
-          {/* Routes with Navbar */}
-          <Route element={<WithNavbar />}>
+      <Suspense fallback={<PageLoader />}>
+        <div className="min-h-screen" style={{ background: "#08090a" }}>
+          <Routes>
             {/* Public */}
-            <Route path="/discover" element={<Discover />} />
-            <Route path="/stories/:storyId/read" element={<StoryRead />} />
-            <Route path="/u/:username" element={<Profile />} />
+            <Route
+              path="/"
+              element={
+                <PublicRoute>
+                  <Home />
+                </PublicRoute>
+              }
+            />
+            <Route
+              path="/login"
+              element={
+                <PublicRoute>
+                  <Login />
+                </PublicRoute>
+              }
+            />
+            <Route
+              path="/register"
+              element={
+                <PublicRoute>
+                  <Register />
+                </PublicRoute>
+              }
+            />
 
-            {/* Protected */}
-            <Route
-              path="/dashboard"
-              element={
-                <ProtectedRoute>
-                  <Dashboard />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/stories/create"
-              element={
-                <ProtectedRoute>
-                  <StoryCreate />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/stories/:storyId/edit"
-              element={
-                <ProtectedRoute>
-                  <StoryEdit />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/stories/:storyId/branches/:branchId"
-              element={
-                <ProtectedRoute>
-                  <BranchView />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/stories/:storyId/commits"
-              element={
-                <ProtectedRoute>
-                  <CommitHistory />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/stories/:storyId/collaborate"
-              element={
-                <ProtectedRoute>
-                  <Collaborate />
-                </ProtectedRoute>
-              }
-            />
-          </Route>
+            {/* With navbar */}
+            <Route element={<WithNavbar />}>
+              {/* Public */}
+              <Route path="/discover" element={<Discover />} />
+              <Route path="/stories/:storyId/read" element={<StoryRead />} />
+              <Route path="/u/:username" element={<Profile />} />
 
-          {/* 404 */}
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </div>
+              <Route
+                path="/dashboard"
+                element={
+                  <ProtectedRoute>
+                    <Dashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/stories/create"
+                element={
+                  <ProtectedRoute>
+                    <StoryCreate />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/stories/:storyId/edit"
+                element={
+                  <ProtectedRoute>
+                    <StoryEdit />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/stories/:storyId/branches/:branchId"
+                element={
+                  <ProtectedRoute>
+                    <BranchView />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/stories/:storyId/commits"
+                element={
+                  <ProtectedRoute>
+                    <CommitHistory />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/stories/:storyId/collaborate"
+                element={
+                  <ProtectedRoute>
+                    <Collaborate />
+                  </ProtectedRoute>
+                }
+              />
+            </Route>
+
+            {/* 404 */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </div>
+      </Suspense>
     </BrowserRouter>
   );
 }
