@@ -29,6 +29,15 @@
   --warning-red:   #eb5757;
   --emerald:       #27a644;
 
+  --bg:            #0f1011;
+  --bg-secondary:  #161718;
+  --border:        #23252a;
+  --text-primary:  #f7f8f8;
+  --text-secondary:#d0d6e0;
+  --text-muted:    #62666d;
+  --accent:        #8dd6ff;
+  --font-body:     'Inter', ui-sans-serif, system-ui, sans-serif;
+
   /* Shadows */
   --shadow-sm:     rgba(0, 0, 0, 0.4) 0px 2px 4px 0px;
   --shadow-subtle: rgb(35, 37, 42) 0px 0px 0px 1px inset;
@@ -160,6 +169,8 @@
     font-size: 14px;
     letter-spacing: -0.13px;
     line-height: 1.4;
+    caret-color: #8dd6ff;
+    color: #ffffff;
   }
   .input:focus {
     border-color: #8dd6ff;

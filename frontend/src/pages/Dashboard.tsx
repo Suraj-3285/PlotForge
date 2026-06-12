@@ -15,13 +15,13 @@ import {
   Lock,
 } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { storyService, forkService } from '../services/api';
+import { storyService, forkService, collaborateService } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import type { Story } from '../types';
 
-// ─────────────────────────────────────────
+
 // STORY CARD
-// ─────────────────────────────────────────
+
 function StoryCard({ story }: { story: Story }) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -288,7 +288,7 @@ function SkeletonCard() {
 export default function Dashboard() {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<'stories' | 'forks'>('stories');
+  const [activeTab, setActiveTab] = useState<'stories' | 'forks' | 'collaborations'>('stories');
 
   const { data: storiesData, isLoading: storiesLoading } = useQuery({
     queryKey: ['myStories'],
@@ -300,8 +300,14 @@ export default function Dashboard() {
     queryFn: () => forkService.getMyForks(),
   });
 
+  const { data: collabData, isLoading: collabLoading } = useQuery({
+    queryKey: ['myCollaborations'],
+    queryFn: () => collaborateService.getMyCollaborations(),
+  });
+
   const stories: Story[] = storiesData?.data?.stories || [];
   const forks: Story[] = forksData?.data?.forks || [];
+  const collaborations = collabData?.data?.collaborations || [];
 
   return (
     <div
@@ -328,7 +334,7 @@ export default function Dashboard() {
               {user?.name || user?.username}
             </h1>
             <p style={{ color: '#62666d', fontSize: '13px' }}>
-              {stories.length} stories · {forks.length} forks
+              {stories.length} stories · {forks.length} forks · {collaborations.length} collaborations
             </p>
           </div>
 
@@ -354,6 +360,7 @@ export default function Dashboard() {
           {[
             { key: 'stories', label: 'Stories', count: stories.length },
             { key: 'forks', label: 'Forked', count: forks.length },
+            { key: 'collaborations', label: 'Collaborations', count: collaborations.length },
           ].map((tab) => (
             <button
               key={tab.key}
@@ -488,6 +495,100 @@ export default function Dashboard() {
                   )}
                 </div>
               ))}
+            </div>
+          )
+        )}
+
+        {/* ── Collaborations Tab ── */}
+        {activeTab === 'collaborations' && (
+          collabLoading ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {[1, 2, 3].map(i => <SkeletonCard key={i} />)}
+            </div>
+          ) : collaborations.length === 0 ? (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="text-center py-20"
+            >
+              <Users
+                size={32}
+                className="mx-auto mb-3"
+                style={{ color: '#383b3f' }}
+              />
+              <h3 className="font-medium mb-1 text-sm" style={{ color: '#8a8f98' }}>
+                No collaborations yet
+              </h3>
+              <p className="text-xs" style={{ color: '#62666d' }}>
+                Stories you've been invited to collaborate on will appear here
+              </p>
+            </motion.div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {collaborations.map((collab: any) => {
+                const story = collab.story;
+                const defaultBranch = story.branches?.[0];
+                return (
+                  <motion.div
+                    key={collab.id}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="rounded-md transition-colors duration-150 cursor-pointer"
+                    style={{ background: '#0f1011', border: '1px solid #23252a' }}
+                    onMouseEnter={e => (e.currentTarget.style.borderColor = '#383b3f')}
+                    onMouseLeave={e => (e.currentTarget.style.borderColor = '#23252a')}
+                    onClick={() =>
+                      defaultBranch &&
+                      navigate(`/stories/${story.id}/branches/${defaultBranch.id}`)
+                    }
+                  >
+                    <div className="w-full h-32 rounded-t-md overflow-hidden relative">
+                      {story.coverImage ? (
+                        <img src={story.coverImage} alt={story.title} className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center" style={{ background: '#161718' }}>
+                          <BookOpen size={24} style={{ color: '#383b3f' }} />
+                        </div>
+                      )}
+                      <div className="absolute top-2.5 left-2.5">
+                        <span
+                          className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-xs font-medium"
+                          style={
+                            collab.role === 'EDITOR'
+                              ? { background: 'rgba(141,214,255,0.1)', border: '1px solid rgba(141,214,255,0.2)', color: '#8dd6ff' }
+                              : { background: '#161718', border: '1px solid #23252a', color: '#62666d' }
+                          }
+                        >
+                          <Users size={9} />
+                          {collab.role}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="p-3">
+                      <h3
+                        className="font-medium text-sm line-clamp-1 mb-1"
+                        style={{ color: '#d0d6e0', letterSpacing: '-0.1px' }}
+                      >
+                        {story.title}
+                      </h3>
+                      {story.description && (
+                        <p className="text-xs line-clamp-1 mb-2" style={{ color: '#62666d' }}>
+                          {story.description}
+                        </p>
+                      )}
+                      <div className="flex items-center gap-2 mt-2">
+                        <span className="text-xs" style={{ color: '#62666d' }}>
+                          by <span style={{ color: '#8a8f98' }}>{story.author.username}</span>
+                        </span>
+                        <span className="flex items-center gap-1 text-xs ml-auto" style={{ color: '#62666d' }}>
+                          <GitBranch size={10} />
+                          {story._count?.branches || 0}
+                        </span>
+                      </div>
+                    </div>
+                  </motion.div>
+                );
+              })}
             </div>
           )
         )}

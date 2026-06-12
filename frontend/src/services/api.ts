@@ -232,7 +232,7 @@ export const aiService = {
   //Return raw fetch for SSE Handling
 
   suggestNext: async (content: string, genre?: string) => {
-    const token = localStorage.getItem("forktale_token");
+    const token = localStorage.getItem("plotforge_token");
 
     return fetch(`${import.meta.env.VITE_API_URL}/ai/suggest-next`, {
       method: "POST",
@@ -245,7 +245,7 @@ export const aiService = {
   },
 
   suggestTwist: async (content: string, genre?: string) => {
-    const token = localStorage.getItem("forktale_token");
+    const token = localStorage.getItem("plotforge_token");
 
     return fetch(`${import.meta.env.VITE_API_URL}/ai/suggest-twist`, {
       method: "POST",
@@ -258,7 +258,7 @@ export const aiService = {
   },
 
   improveWriting: async (content: string) => {
-    const token = localStorage.getItem("forktale_token");
+    const token = localStorage.getItem("plotforge_token");
 
     return fetch(`${import.meta.env.VITE_API_URL}/ai/improve`, {
       method: "POST",

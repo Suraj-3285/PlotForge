@@ -176,10 +176,12 @@ function NewBranchModal({
   onCreate,
   onClose,
   loading,
+  error,
 }: {
   onCreate: (name: string) => void;
   onClose: () => void;
   loading: boolean;
+  error?: string;
 }) {
   const [name, setName] = useState("");
   return (
@@ -280,6 +282,21 @@ function NewBranchModal({
         >
           Letters, numbers, hyphens and underscores only
         </p>
+        {error && (
+          <p
+            style={{
+              fontSize: 12,
+              color: "#eb5757",
+              marginBottom: 12,
+              padding: "6px 10px",
+              background: "rgba(235, 87, 87, 0.08)",
+              border: "1px solid rgba(235, 87, 87, 0.2)",
+              borderRadius: 6,
+            }}
+          >
+            {error}
+          </p>
+        )}
         <div style={{ display: "flex", justifyContent: "flex-end", gap: 8 }}>
           <button onClick={onClose} className="btn btn-ghost">
             Cancel
@@ -558,6 +575,7 @@ export default function BranchView() {
   const [content, setContent] = useState("");
   const [showCommitModal, setShowCommitModal] = useState(false);
   const [showBranchModal, setShowBranchModal] = useState(false);
+  const [branchError, setBranchError] = useState('');
   const [showBranchDrop, setShowBranchDrop] = useState(false);
   const [showFontMenu, setShowFontMenu] = useState(false);
   const [showAI, setShowAI] = useState(false);
@@ -692,8 +710,12 @@ export default function BranchView() {
       }),
     onSuccess: (res) => {
       setShowBranchModal(false);
+      setBranchError('');
       queryClient.invalidateQueries({ queryKey: ["branches", storyId] });
       navigate(`/stories/${storyId}/branches/${res.data.branch.id}`);
+    },
+    onError: (err: any) => {
+      setBranchError(err.response?.data?.message || 'Failed to create branch.');
     },
   });
 
@@ -926,6 +948,7 @@ export default function BranchView() {
                   />
                   <button
                     onClick={() => {
+                      setBranchError('');
                       setShowBranchModal(true);
                       setShowBranchDrop(false);
                     }}
@@ -1361,7 +1384,7 @@ export default function BranchView() {
               fontFamily: FONTS[fontIdx].value,
               fontSize: SIZES[sizeIdx].value,
               lineHeight: 1.85,
-              color: "#1c1c1c",
+              color: "#f7f8f8",
               caretColor: "var(--accent)",
               letterSpacing: "0.008em",
             }}
@@ -1398,8 +1421,9 @@ export default function BranchView() {
         {showBranchModal && (
           <NewBranchModal
             onCreate={(name) => branchMutation.mutate(name)}
-            onClose={() => setShowBranchModal(false)}
+            onClose={() => { setShowBranchModal(false); setBranchError(''); }}
             loading={branchMutation.isPending}
+            error={branchError}
           />
         )}
       </AnimatePresence>
@@ -1428,10 +1452,11 @@ export default function BranchView() {
               onClick={(e) => e.stopPropagation()}
               style={{
                 width: 420,
-                background: "var(--bg)",
+                background: "#0f1011",
                 borderRadius: 12,
                 padding: 24,
-                border: "1px solid var(--border)",
+                border: "1px solid #23252a",
+                boxShadow: "rgba(255,255,255,0.03) 0px 0px 0px 1px inset, rgba(0,0,0,0.6) 0px 0px 0px 1px",
               }}
             >
               <h3 style={{ marginBottom: 16 }}>Collaborators</h3>
@@ -1443,17 +1468,38 @@ export default function BranchView() {
                 onChange={(e) => setInviteUsername(e.target.value)}
               />
 
-              <select
-                className="input"
-                value={inviteRole}
-                onChange={(e) =>
-                  setInviteRole(e.target.value as "VIEWER" | "EDITOR")
-                }
-                style={{ marginTop: 12 }}
-              >
-                <option value="EDITOR">EDITOR</option>
-                <option value="VIEWER">VIEWER</option>
-              </select>
+              <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
+  {(["EDITOR", "VIEWER"] as const).map((r) => (
+    <button
+      key={r}
+      type="button"
+      onClick={() => setInviteRole(r)}
+      style={{
+        flex: 1,
+        padding: "8px 12px",
+        borderRadius: 6,
+        fontSize: 13,
+        fontWeight: 500,
+        cursor: "pointer",
+        transition: "all 0.15s",
+        background:
+          inviteRole === r
+            ? "rgba(141,214,255,0.1)"
+            : "transparent",
+        border:
+          inviteRole === r
+            ? "1px solid rgba(141,214,255,0.25)"
+            : "1px solid #23252a",
+        color:
+          inviteRole === r
+            ? "#8dd6ff"
+            : "#8a8f98",
+      }}
+    >
+      {r}
+    </button>
+  ))}
+</div>
 
               <button
                 className="btn btn-primary"
