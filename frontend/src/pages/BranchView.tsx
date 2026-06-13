@@ -1198,6 +1198,7 @@ export default function BranchView() {
           </button>
 
           {/* Publish */}
+          {isAuthor ? (
           <motion.button
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
@@ -1235,6 +1236,29 @@ export default function BranchView() {
             )}
             Publish
           </motion.button>
+          ) : (
+          <div title="Only the story author can publish" style={{ position: "relative", display: "inline-flex" }}>
+            <div
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 5,
+                padding: "6px 12px",
+                borderRadius: 7,
+                fontSize: 13,
+                fontWeight: 500,
+                cursor: "not-allowed",
+                border: "1.5px solid #23252a",
+                background: "transparent",
+                color: "#383b3f",
+                fontFamily: "var(--font-body)",
+              }}
+            >
+              <Globe size={13} />
+              Publish
+            </div>
+          </div>
+          )}
 
           <button
             onClick={() => setShowCollaborators(true)}
