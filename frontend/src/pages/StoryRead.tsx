@@ -103,7 +103,7 @@ function StarRating({
         <span
           style={{
             fontSize: 13,
-            color: "var(--text-muted)",
+            color: "#62666d",
             fontFamily: "var(--font-body)",
           }}
         >
@@ -215,7 +215,7 @@ function EndingCard({
       <p
         style={{
           fontSize: 12,
-          color: "var(--text-muted)",
+          color: "#62666d",
           fontFamily: "var(--font-body)",
         }}
       >
@@ -287,7 +287,7 @@ export default function StoryRead() {
         <Loader2
           size={20}
           style={{
-            color: "var(--text-muted)",
+            color: "#62666d",
             animation: "spin 0.7s linear infinite",
           }}
         />
@@ -318,12 +318,12 @@ export default function StoryRead() {
               margin: "0 auto 16px",
             }}
           >
-            <BookOpen size={24} style={{ color: "var(--text-muted)" }} />
+            <BookOpen size={24} style={{ color: "#62666d" }} />
           </div>
           <p
             style={{
               fontSize: 14,
-              color: "var(--text-secondary)",
+              color: "#d0d6e0",
               fontFamily: "var(--font-body)",
             }}
           >
@@ -349,7 +349,7 @@ export default function StoryRead() {
             gap: 6,
             marginBottom: 28,
             fontSize: 13,
-            color: "var(--text-muted)",
+            color: "#62666d",
             background: "none",
             border: "none",
             cursor: "pointer",
@@ -418,7 +418,7 @@ export default function StoryRead() {
                       fontWeight: 400,
                       fontStyle: "italic",
                       letterSpacing: "-0.03em",
-                      color: "var(--text-primary)",
+                      color: "#f7f8f8",
                       fontFamily: "var(--font-display)",
                       lineHeight: 1.1,
                       marginBottom: 14,
@@ -470,7 +470,7 @@ export default function StoryRead() {
                       onClick={() => navigate(`/u/${story.author.username}`)}
                       style={{
                         fontSize: 13,
-                        color: "var(--text-secondary)",
+                        color: "#d0d6e0",
                         background: "none",
                         border: "none",
                         cursor: "pointer",
@@ -541,7 +541,7 @@ export default function StoryRead() {
                           alignItems: "center",
                           gap: 5,
                           fontSize: 13,
-                          color: "var(--text-muted)",
+                          color: "#62666d",
                           fontFamily: "var(--font-body)",
                         }}
                       >
@@ -578,7 +578,7 @@ export default function StoryRead() {
                 <p
                   style={{
                     fontSize: 15,
-                    color: "var(--text-secondary)",
+                    color: "#d0d6e0",
                     lineHeight: 1.7,
                     fontFamily: "var(--font-body)",
                     maxWidth: 640,
@@ -602,12 +602,12 @@ export default function StoryRead() {
               >
                 <BookOpen
                   size={28}
-                  style={{ color: "var(--text-muted)", margin: "0 auto 12px" }}
+                  style={{ color: "#62666d", margin: "0 auto 12px" }}
                 />
                 <p
                   style={{
                     fontSize: 14,
-                    color: "var(--text-secondary)",
+                    color: "#d0d6e0",
                     fontFamily: "var(--font-body)",
                   }}
                 >
@@ -625,7 +625,7 @@ export default function StoryRead() {
                 <Loader2
                   size={20}
                   style={{
-                    color: "var(--text-muted)",
+                    color: "#62666d",
                     animation: "spin 0.7s linear infinite",
                   }}
                 />
@@ -657,7 +657,7 @@ export default function StoryRead() {
                         fontWeight: 600,
                         letterSpacing: "0.08em",
                         textTransform: "uppercase",
-                        color: "var(--text-muted)",
+                        color: "#62666d",
                         marginBottom: 3,
                         fontFamily: "var(--font-body)",
                       }}
@@ -668,7 +668,7 @@ export default function StoryRead() {
                       style={{
                         fontSize: 16,
                         fontWeight: 600,
-                        color: "var(--accent)",
+                        color: "#8dd6ff",
                         fontFamily: "var(--font-body)",
                       }}
                     >
@@ -692,7 +692,7 @@ export default function StoryRead() {
                     fontFamily: "Georgia, 'Times New Roman', serif",
                     fontSize: 19,
                     lineHeight: 2,
-                    color: "#1f2937",
+                    color: "#d0d6e0",
                     letterSpacing: "0.01em",
                   }}
                 >
@@ -727,7 +727,7 @@ export default function StoryRead() {
                   <span
                     style={{
                       fontSize: 12,
-                      color: "var(--text-muted)",
+                      color: "#62666d",
                       fontFamily: "var(--font-mono)",
                       letterSpacing: "0.06em",
                     }}
@@ -781,7 +781,7 @@ export default function StoryRead() {
                   fontWeight: 600,
                   letterSpacing: "0.08em",
                   textTransform: "uppercase",
-                  color: "var(--text-muted)",
+                  color: "#62666d",
                   marginBottom: 12,
                   fontFamily: "var(--font-body)",
                 }}
@@ -815,7 +815,7 @@ export default function StoryRead() {
                       fontWeight: 600,
                       letterSpacing: "0.06em",
                       textTransform: "uppercase",
-                      color: "var(--text-muted)",
+                      color: "#62666d",
                       marginBottom: 8,
                       fontFamily: "var(--font-body)",
                     }}
@@ -829,7 +829,7 @@ export default function StoryRead() {
                     style={{
                       fontSize: 13,
                       fontWeight: 500,
-                      color: "var(--accent)",
+                      color: "#8dd6ff",
                       background: "none",
                       border: "none",
                       cursor: "pointer",
@@ -852,7 +852,7 @@ export default function StoryRead() {
                   <p
                     style={{
                       fontSize: 12,
-                      color: "var(--text-muted)",
+                      color: "#62666d",
                       marginTop: 3,
                       fontFamily: "var(--font-body)",
                     }}
