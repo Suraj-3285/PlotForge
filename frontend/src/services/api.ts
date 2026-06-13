@@ -194,7 +194,7 @@ export const collaborateService = {
   remove: (storyId: string, collaboratorId: string) =>
     api.delete(`/stories/${storyId}/collaborators/${collaboratorId}`),
 
-  getMyCollaborations: () => api.get("/collaborations/my"),
+  getMyCollaborations: () => api.get("/stories/my/collaborations"),
 };
 
 //Publish Services

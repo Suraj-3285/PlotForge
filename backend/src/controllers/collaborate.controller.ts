@@ -251,6 +251,11 @@ export const getMyCollaborations = async (req: AuthRequest, res: Response) => {
                                 avatar: true,
                             },
                         },
+                        branches: {
+                            orderBy: { createdAt: 'asc' },
+                            take: 1,
+                            select: { id: true, name: true, isDefault: true },
+                        },
                         _count: {
                             select: { branches : true},
                         },
