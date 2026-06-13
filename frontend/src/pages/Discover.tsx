@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState,useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
@@ -8,6 +8,7 @@ import {
   GitBranch,
   Globe,
   SlidersHorizontal,
+  ChevronDown,
 } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { storyService, forkService } from '../services/api';
@@ -191,6 +192,18 @@ export default function Discover() {
   const debouncedSearch = useDebounce(search, 400);
   const [genre, setGenre] = useState('All');
   const [sort, setSort] = useState<'latest' | 'top'>('latest');
+  const [showSortDrop, setShowSortDrop] = useState(false);
+  const sortRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (sortRef.current && !sortRef.current.contains(e.target as Node)) {
+        setShowSortDrop(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
 
   const { data, isLoading } = useQuery({
     queryKey: ['discover',debouncedSearch , genre, sort],
@@ -255,22 +268,65 @@ export default function Discover() {
             />
           </div>
 
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-1.5" ref={sortRef} style={{ position: 'relative' }}>
             <SlidersHorizontal size={12} style={{ color: '#62666d' }} />
-            <select
-              value={sort}
-              onChange={e => setSort(e.target.value as any)}
-              className="input cursor-pointer"
+            <button
+              onClick={() => setShowSortDrop(v => !v)}
               style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 6,
                 fontSize: '13px',
                 height: '34px',
-                padding: '0 8px',
+                padding: '0 10px',
                 width: '120px',
+                background: '#0f1011',
+                border: '1px solid #23252a',
+                borderRadius: 6,
+                color: '#f7f8f8',
+                cursor: 'pointer',
+                justifyContent: 'space-between',
               }}
             >
-              <option value="latest">Latest</option>
-              <option value="top">Top rated</option>
-            </select>
+              {sort === 'latest' ? 'Latest' : 'Top rated'}
+              <ChevronDown size={12} style={{ color: '#62666d', transform: showSortDrop ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }} />
+            </button>
+            {showSortDrop && (
+              <div style={{
+                position: 'absolute',
+                top: 'calc(100% + 4px)',
+                right: 0,
+                background: '#0f1011',
+                border: '1px solid #23252a',
+                borderRadius: 6,
+                overflow: 'hidden',
+                zIndex: 50,
+                width: '120px',
+                boxShadow: 'rgba(0,0,0,0.6) 0px 8px 24px',
+              }}>
+                {([['latest', 'Latest'], ['top', 'Top rated']] as const).map(([val, label]) => (
+                  <button
+                    key={val}
+                    onClick={() => { setSort(val); setShowSortDrop(false); }}
+                    style={{
+                      width: '100%',
+                      padding: '8px 12px',
+                      fontSize: '13px',
+                      textAlign: 'left',
+                      background: sort === val ? 'rgba(141,214,255,0.07)' : 'transparent',
+                      color: sort === val ? '#8dd6ff' : '#8a8f98',
+                      border: 'none',
+                      cursor: 'pointer',
+                      display: 'block',
+                    }}
+                    onMouseEnter={e => { if (sort !== val) (e.currentTarget as HTMLElement).style.background = '#161718'; }}
+                    onMouseLeave={e => { if (sort !== val) (e.currentTarget as HTMLElement).style.background = 'transparent'; }}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         </motion.div>
 
