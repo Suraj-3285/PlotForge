@@ -6,7 +6,6 @@ import {
   BookOpen,
   Tag,
   X,
-  ImagePlus,
   Loader2,
 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
