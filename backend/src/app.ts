@@ -23,9 +23,18 @@ dotenv.config();
 const app = express();
 
 // Global Middlewares
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  'https://plotforge-seven.vercel.app',
+].filter(Boolean) as string[];
+
 app.use(cors({
-  origin: process.env.CLIENT_URL,
-  credentials: true
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+    callback(new Error(`CORS: origin ${origin} not allowed`));
+  },
+  credentials: true,
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
